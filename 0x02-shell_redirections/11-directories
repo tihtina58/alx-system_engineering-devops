@@ -1,2 +1,2 @@
 #!/bin/bash
-find . .. / -maxdepth 0 -type d
+find ./* type d | wc -1
