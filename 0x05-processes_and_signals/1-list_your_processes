@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# list current processes. a for all,
+# u for processes on a terminal, 
+# x for processes without controlling ttys.
+ps -faux
