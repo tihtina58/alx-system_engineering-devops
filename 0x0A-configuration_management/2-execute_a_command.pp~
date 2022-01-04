@@ -1,6 +1,0 @@
-# create a manifest that kills a process
-
-exe { 'kill killmenow process':
-   command   => 'pkill killmenow',
-   provider  => 'shell',
-}
