@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# install nginx and set the server to display Holberton School
+sudo apt-get update
+sudo apt -y install nginx
+echo 'Holberton School' > /var/www/html/index.nginx-debian.html
+echo "Ceci n'est pas une page" > /var/www/html/404.html
+rep="server_name _;\n\trewrite /redirect_me https://www.google.com/ permanent;\n\terror_page  404  /404.html;\n"
+sed -i 's|server_name _;|'"$rep"'|' /etc/nginx/sites-enabled/default
+sudo service nginx restart
