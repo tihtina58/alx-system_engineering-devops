@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# comment.
+chown -R nginx:nginx /etc/nginx/nginx.conf
+pattern1="listen 80 default_server;"
+pattern2="listen \[::\]:80 default_server ipv6only=on;"
+repl1="listen 8080 default_server;"
+repl2="listen \[::\]:8080 default_server ipv6only=on;"
+chmod 700 /etc/nginx/nginx.conf
+sudo sed -i "s/$pattern1/$repl1/" /etc/nginx/sites-available/default
+sudo sed -i "s/$pattern2/$repl2/" /etc/nginx/sites-available/default
+pkill apache2
+sudo -u nginx service nginx restart
