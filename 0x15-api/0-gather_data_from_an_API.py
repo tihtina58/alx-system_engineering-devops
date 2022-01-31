@@ -1,30 +1,57 @@
 #!/usr/bin/python3
+
 """
-    script that, using this REST API, for a given employee
-    ID, returns information about his/her TODO list progress.
+gather data from an API
 """
+
 import requests
 import sys
 
 
-if __name__ == "__main__":
-    url = 'https://jsonplaceholder.typicode.com'
-    user_res = requests.get('{}/users/{}'.format(url, sys.argv[1])).json()
-    todo_res = requests.get('{}/todos?userId={}'.format(
-        url, sys.argv[1])).json()
+def get_username(base_url, user_id):
+    """Gets username
+    """
+    response = requests.get(
+        "{}users/{}".format(base_url, user_id))
+    usr_dict = response.json()
+    return usr_dict['name']
 
-    def task_completed(todo_res):
-        """
-            Return task completed
-        """
-        count = 0
-        for value in todo_res:
-            if value.get('completed'):
-                count += 1
-        return count
 
-    print("Employee {} is done with tasks({}/{}):".format(
-        user_res.get('name'), task_completed(todo_res), len(todo_res)))
-    for listdict in todo_res:
-        if listdict.get('completed'):
-            print("\t {}".format(listdict.get('title')))
+def get_todo_list(base_url, user_id):
+    """Gets todo list
+    """
+    response = requests.get(
+        "{}users/{}/todos".format(base_url, user_id))
+    return response.json()
+
+
+def get_completed(todo_list):
+    """Gets complete item
+    """
+
+    done_str = ""
+    done_list = []
+    count = 0
+    for todo in todo_list:
+        if todo['completed'] is True:
+            count += 1
+            done_list.append("\t {}".format(todo['title']))
+        done_str = "\n".join(done_list)
+
+    return count, done_str
+
+
+if __name__ == '__main__':
+    user_id = sys.argv[1]
+    base_url = 'https://jsonplaceholder.typicode.com/'
+
+    uname = get_username(base_url, user_id)
+    todo_list = get_todo_list(base_url, user_id)
+    total = len(todo_list)
+
+    count, done_str = get_completed(todo_list)
+
+    print(
+        "Employee {} is done with tasks({}/{}):".format(uname, count, total))
+    if count > 0:
+        print(done_str)
